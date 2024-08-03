@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:restaurant_app_api/controller/buttom_controller.dart';
-import 'package:restaurant_app_api/controller/notifikasi_controller.dart';
+
+import 'package:restaurant_app_api/controller/schdule_notifikasi_controller.dart';
 import 'package:restaurant_app_api/controller/switch_controller.dart';
 import 'package:restaurant_app_api/routes/route_name.dart';
 
 class Settings extends StatelessWidget {
   final ButtomController controllerB = Get.put(ButtomController());
   final SwitchController switchC = Get.put(SwitchController());
-  final NotificationController notifC = Get.put(NotificationController());
 
+  final SchedulingController schedulingController =
+      Get.put(SchedulingController());
   Settings({Key? key}) : super(key: key);
 
   @override
@@ -29,14 +31,9 @@ class Settings extends StatelessWidget {
                 style: const TextStyle(fontSize: 18),
               ),
               Switch(
-                value: switchC.isSwitched.value,
+                value: schedulingController.isScheduled,
                 onChanged: (value) {
-                  switchC.toggleSwitch();
-                  if (value) {
-                    notifC.scheduleNotification();
-                  } else {
-                    notifC.cancelAlarm();
-                  }
+                  schedulingController.scheduledRestaurant(value);
                 },
               ),
             ],

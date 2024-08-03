@@ -4,16 +4,26 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:restaurant_app_api/model/restaurant_list.dart';
+import 'package:restaurant_app_api/routes/route_name.dart';
+import 'package:restaurant_app_api/utils/notification_helper.dart';
 
 class RestaurantListController extends GetxController {
   var restaurants = <Map<String, dynamic>>[].obs;
   final List<String> favoriteRestaurants = <String>[].obs;
   final RxBool isLoading = true.obs;
+  final NotificationHelper _notificationHelper = NotificationHelper();
 
   @override
   void onInit() {
     super.onInit();
     fetchRestaurantsList();
+    _notificationHelper.configureSelectNotificationSubject(RouteName.homePage);
+  }
+
+  @override
+  void dispose() {
+    selectNotificationSubject.close();
+    super.dispose();
   }
 
   @override
@@ -73,12 +83,12 @@ class RestaurantListController extends GetxController {
     return null;
   }
 
-  Future<Restaurant> fetchMockRestaurants(http.Client client) async {
+  Future<Welcome> fetchMockRestaurants(http.Client client) async {
     final response =
         await client.get(Uri.parse('https://restaurant-api.dicoding.dev/list'));
 
     if (response.statusCode == 200) {
-      return Restaurant.fromJson(jsonDecode(response.body));
+      return Welcome.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load restaurants');
     }
